@@ -72,6 +72,10 @@ public class GreetingController {
     public Message updateByID(@RequestBody Message message,@PathVariable Long ID){
         return greetingServices.updateByID(message,ID);
     }
+    @DeleteMapping("/delete/{ID}")
+    public String deleteByID(@PathVariable Long ID){
+        return greetingServices.deleteByID(ID);
+    }
 
     }
 

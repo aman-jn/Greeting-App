@@ -1,8 +1,10 @@
 package org.springboot.greetingapp.Controller;
 
 import jakarta.websocket.server.PathParam;
+import org.springboot.greetingapp.Interfaces.IGreetingInterface;
 import org.springboot.greetingapp.Model.Message;
-import org.springboot.greetingapp.Services.GreetingServices;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,12 +13,11 @@ import java.util.List;
 @RequestMapping("/greeting")  // Base URL for all endpoints: /greeting
 public class GreetingController {
 
-    GreetingServices greetingServices;
 
-    // Constructor-based Dependency Injection
-    public GreetingController(GreetingServices greetingServices) {
-        this.greetingServices = greetingServices;
-    }
+    @Autowired
+    IGreetingInterface greetingInterface;
+
+
 
     Message message;
 
@@ -53,10 +54,10 @@ public class GreetingController {
      * DELETE request - Deletes a message via URL path variable.
      * URL: http://localhost:8080/greeting/delete/{message}
      */
-    @DeleteMapping("/delete/{message}")
-    public String greetingDelete(@PathVariable String message) {
-        return "Hello Delete Request from " + message;
-    }
+//    @DeleteMapping("/delete/{message}")
+//    public String greetingDelete(@PathVariable String message) {
+//        return "Hello Delete Request from " + message;
+//    }
 
     /**
 
@@ -69,13 +70,14 @@ public class GreetingController {
     }
 
     /**
-     *   UC2-GreetingServices
+     *   UC2-greetingInterface
      * GET request - Calls a service method and returns its response.
      * URL: http://localhost:8080/greeting/services
      */
     @GetMapping("/services")
-    public String greetingServices() {
-        return greetingServices.getGreeting();
+    public String greetingInterface() {
+
+        return greetingInterface.getGreeting();
     }
 
     /**
@@ -106,7 +108,7 @@ public class GreetingController {
      */
     @PostMapping("/save")
     public String save(@RequestBody Message message) {
-        return greetingServices.save(message).getMessage();
+        return greetingInterface.save(message).getMessage();
     }
 
     /**
@@ -116,7 +118,7 @@ public class GreetingController {
      */
     @GetMapping("/find/{ID}")
     public Message findbyID(@PathVariable Long ID) {
-        return greetingServices.findbyID(ID);
+        return greetingInterface.findById(ID);
     }
 
     /**
@@ -126,7 +128,7 @@ public class GreetingController {
      */
     @GetMapping("/all")
     public List<Message> getAll() {
-        return greetingServices.getAll();
+        return greetingInterface.listAllMessages();
     }
 
     /**
@@ -137,7 +139,7 @@ public class GreetingController {
      */
     @PutMapping("/update/{ID}")
     public Message updateByID(@RequestBody Message message, @PathVariable Long ID) {
-        return greetingServices.updateByID(message, ID);
+        return greetingInterface.updateById(message, ID);
     }
 
     /**
@@ -148,7 +150,7 @@ public class GreetingController {
 
     @DeleteMapping("/delete/{ID}")
     public String deleteByID(@PathVariable Long ID) {
-        return greetingServices.deleteByID(ID);
+        return greetingInterface.deleteMessage(ID);
     }
 
 
